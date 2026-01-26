@@ -1,3 +1,15 @@
+# return elements from text file as list
+def read_file():
+     with open("todos.txt", "r") as file :
+            return file.readlines()
+
+# writes the argument to files as todos   
+def writeto_file(todos):
+    with open("todos.txt","w") as file:
+        file.writelines(todos)
+
+
+
 while True :
 
     user_prompt= input("Enter prompts: add <your-todos>, show, edit <todos-index>, complete <todos-index>, or exit: ")
@@ -10,58 +22,64 @@ while True :
 
     if "add" == command :
         
-        todos = argument + "\n"
-        
-        with open("todos.txt", "r") as file :
-            todo = file.readlines()                   
+        todos = argument + "\n"  
+        todo = read_file()                   
         
         todo.append(todos.title())                     
         
-        with open("todos.txt", "w") as file :
-            file.writelines(todo)
+        writeto_file(todo)
 
         print("The todo is added\n")
 
     elif "show" == command :
-        with open('todos.txt', 'r') as file :      
-            todos_list= file.readlines()         
-        
-        todos= [w.strip("\n") for w in todos_list] 
+                
+            todos_list=  read_file()           
+            todos= [w.strip("\n") for w in todos_list] 
 
-    
-        for i, list_element in enumerate(todos, start=1):      
-            print(i, list_element) 
-        
+            for i, list_element in enumerate(todos, start=1):      
+                print(i, list_element)     
+
     elif "edit" == command :
-        ndx= int(argument)
-        ndx= ndx-1
+        try:
+            ndx= int(argument)
+            ndx= ndx-1
 
-        with open("todos.txt", "r") as file :
-            todos= file.readlines()
-        
-        new_todos = input("Enter new todo: ")
-        todos[ndx]= new_todos.title() +'\n'
+            todos=  read_file()
+            
+            new_todos = input("Enter new todo: ")
+            todos[ndx]= new_todos.title() +'\n'
 
-        with open('todos.txt', 'w') as file :
-            file.writelines(todos)
-        
-        print(f"The todo no {ndx+1} was changed type 'show' to see.\n")
+            writeto_file(todos)
+            
+            print(f"The todo no {ndx+1} was changed type 'show' to see.\n")
+
+        except ValueError:
+            print("Invalid syntax please try again:\n")
+            continue
+        except IndexError:
+            print("Invalid index please try again:\n")
+            continue
 
     elif "complete" == command :
-        
-        ndx= int(argument)
-        ndx= ndx-1
-        
-        with open('todos.txt','r') as file :
-            todos= file.readlines()
-        
-        removed_todo= todos[ndx]
-        todos.pop(ndx)
+        try:
+            ndx= int(argument)
+            ndx= ndx-1
+            
+            todos=  read_file()
+            
+            removed_todo= todos[ndx]
+            todos.pop(ndx)
 
-        with open('todos.txt','w') as file :
-            file.writelines(todos)
-        
-        print(f'The todo-item "{removed_todo.strip()}" was removed from the list \n')
+            writeto_file(todos)
+             
+            print(f'The todo-item "{removed_todo.strip()}" was removed from the list \n')
+
+        except ValueError:
+            print("Invalid syntax please try again")
+            continue
+        except IndexError:
+            print("Invalid index please try again:\n")
+            continue
 
     elif "exit" == command :
         break
